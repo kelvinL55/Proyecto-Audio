@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Recorder } from './components/Recorder';
 import { TextImprover } from './components/TextImprover';
@@ -6,6 +7,9 @@ import { SkeletonLoader } from './components/SkeletonLoader';
 import { Message, AppState, ImprovementOptions, ImprovementResult } from './types';
 import { blobToBase64, pcmToAudioBuffer } from './utils/audioUtils';
 import { transcribeAndPolishAudio, speakText, improveText } from './services/geminiService';
+
+// Removed conflicting local declaration of aistudio on Window interface
+// The environment already provides a global definition for aistudio of type AIStudio.
 
 type Theme = 'light' | 'dark' | 'system';
 type InputMode = 'voice' | 'text';
@@ -17,9 +21,32 @@ const App: React.FC = () => {
   const [inputMode, setInputMode] = useState<InputMode>('voice');
   const [manualText, setManualText] = useState<string>('');
   const [improvedResult, setImprovedResult] = useState<ImprovementResult | null>(null);
+  const [hasApiKey, setHasApiKey] = useState<boolean>(true);
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
+
+  useEffect(() => {
+    const checkKey = async () => {
+      // Use type assertion to avoid conflict with existing global AIStudio type
+      const aiStudio = (window as any).aistudio;
+      if (aiStudio) {
+        const selected = await aiStudio.hasSelectedApiKey();
+        setHasApiKey(selected);
+      }
+    };
+    checkKey();
+  }, []);
+
+  const handleOpenKeyDialog = async () => {
+    // Use type assertion to avoid conflict with existing global AIStudio type
+    const aiStudio = (window as any).aistudio;
+    if (aiStudio) {
+      await aiStudio.openSelectKey();
+      setHasApiKey(true); // Assume success according to guidelines
+    }
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -63,7 +90,7 @@ const App: React.FC = () => {
       const result = await transcribeAndPolishAudio(base64Audio, audioBlob.type);
       setSegments([{ ...tempSegment, content: result.raw, polishedVersion: result.polished }]);
     } catch (error: any) {
-      setSegments([{ ...tempSegment, polishedVersion: "Error: No se pudo transcribir el audio." }]);
+      setSegments([{ ...tempSegment, polishedVersion: "Error: No se pudo conectar con el servicio de IA." }]);
     } finally { setAppState(AppState.IDLE); }
   };
 
@@ -82,8 +109,13 @@ const App: React.FC = () => {
     try {
       const result = await improveText(segments[0].polishedVersion, options);
       setImprovedResult(result);
-    } catch (error) {
-      alert("No se pudo mejorar el texto. Intenta de nuevo.");
+    } catch (error: any) {
+      if (error.message === 'KEY_REQUIRED') {
+        setHasApiKey(false);
+        alert("Para usar el modelo Gemini Pro se requiere configurar una API Key de un proyecto con facturación.");
+      } else {
+        alert("Ocurrió un error al procesar la solicitud. Verifica tu conexión e intenta de nuevo.");
+      }
     } finally { setAppState(AppState.IDLE); }
   };
 
@@ -117,9 +149,20 @@ const App: React.FC = () => {
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-[#202123] text-gray-900 dark:text-gray-100 font-sans overflow-hidden transition-colors duration-200">
       <header className="flex-none bg-white/80 dark:bg-[#343541]/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 py-3 px-6 shadow-sm z-30 flex justify-between items-center sticky top-0">
         <Logo />
-        <button onClick={toggleTheme} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-all active:scale-95">
-          {getThemeIcon()}
-        </button>
+        <div className="flex items-center gap-4">
+          {!hasApiKey && (
+            <button 
+              onClick={handleOpenKeyDialog}
+              className="px-3 py-1.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-lg border border-amber-200 dark:border-amber-800 hover:bg-amber-200 transition-colors flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" /></svg>
+              Configurar API Key
+            </button>
+          )}
+          <button onClick={toggleTheme} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-all active:scale-95">
+            {getThemeIcon()}
+          </button>
+        </div>
       </header>
 
       <div className="flex-none bg-white dark:bg-[#2A2B32] border-b border-gray-200 dark:border-gray-700 p-4 md:p-6 shadow-md z-20">

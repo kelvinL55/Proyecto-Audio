@@ -3,14 +3,14 @@ export interface Message {
   id: string;
   role: 'user' | 'model';
   content: string;
-  originalTranscription?: string; // The raw transcription before polish
-  polishedVersion?: string; // The grammatically corrected version
+  originalTranscription?: string;
+  polishedVersion?: string;
   timestamp: number;
-  audioUrl?: string; // If it's a user audio message
+  audioUrl?: string;
 }
 
 export interface AudioConfig {
-  gain: number; // Amplification level (1.0 = normal, 2.0 = double volume)
+  gain: number;
 }
 
 export enum AppState {
@@ -21,21 +21,24 @@ export enum AppState {
   IMPROVING = 'IMPROVING'
 }
 
-export type PlatformType = 'email' | 'chat' | 'instructions';
+export type PlatformType = 'email' | 'chat' | 'instructions' | 'prompt_improver';
 export type EmailTone = 'formal' | 'semi-formal' | 'neutral';
 export type ChatTone = 'angry' | 'serious' | 'friendly' | 'professional' | 'formal';
 export type InstructionTone = 'professional' | 'semi-formal' | 'neutral';
+export type PromptCategory = 'image' | 'code' | 'video' | 'general';
 
 export interface ImprovementOptions {
   type: PlatformType;
   emailTone?: EmailTone;
   chatTone?: ChatTone;
   instructionTone?: InstructionTone;
+  promptCategory?: PromptCategory;
+  imaginationLevel?: number; // 1 to 5
   useEmojis?: boolean;
   isHumanized?: boolean;
 }
 
 export interface ImprovementResult {
-  subject?: string; // Only for email
+  subject?: string;
   body: string;
 }
