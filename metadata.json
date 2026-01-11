@@ -1,0 +1,7 @@
+{
+  "name": "Transcribo Pro - Audio Inteligente",
+  "description": "Una aplicación de transcripción avanzada que graba, amplifica y mejora el audio para generar texto con gramática y puntuación perfectas.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

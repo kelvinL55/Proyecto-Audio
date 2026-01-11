@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Transcribo Pro es una herramienta avanzada de transcripción de audio a texto impulsada por IA. Graba, mejora la calidad de audio y corrige gramática y puntuación automáticamente." />
+    <meta name="keywords" content="transcripción, audio a texto, IA, gramática, corrección ortográfica, grabación de voz, Gemini API" />
+    <meta name="author" content="Transcribo Pro" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Transcribo Pro - Audio Inteligente" />
+    <meta property="og:description" content="Convierte tu voz en texto perfectamente redactado con IA." />
+    <meta property="og:locale" content="es_ES" />
+
+    <title>Transcribo Pro - Transcripción y Mejora de Audio con IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              gptDark: '#343541',
+              gptDarker: '#202123',
+              gptLight: '#FFFFFF',
+              gptGray: '#F7F7F8',
+              brand: '#10a37f',
+              brandDark: '#0d8c6d'
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'slide-up': 'slideUp 0.4s ease-out',
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #4b5563;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+      }
+
+      /* Skeleton Shimmer */
+      .skeleton-loader {
+        background: linear-gradient(
+          90deg,
+          rgba(226, 232, 240, 1) 0%,
+          rgba(241, 245, 249, 1) 50%,
+          rgba(226, 232, 240, 1) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+      .dark .skeleton-loader {
+        background: linear-gradient(
+          90deg,
+          rgba(55, 65, 81, 1) 0%,
+          rgba(75, 85, 99, 1) 50%,
+          rgba(55, 65, 81, 1) 100%
+        );
+      }
+
+      @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.32.0",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "react": "https://esm.sh/react@^19.2.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/"
+  }
+}
+</script>
+</head>
+  <body class="bg-gray-50 dark:bg-[#343541] text-gray-900 dark:text-[#ECECF1] transition-colors duration-200 antialiased selection:bg-brand/20 selection:text-brandDark">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
