@@ -48,11 +48,10 @@ export const TextImprover: React.FC<TextImproverProps> = ({ onImprove, isProcess
           <button
             key={opt.id}
             onClick={() => setPlatform(opt.id as PlatformType)}
-            className={`py-2 px-3 rounded-xl flex items-center justify-center gap-2 border text-xs font-bold transition-all ${
-              platform === opt.id
+            className={`py-2 px-3 rounded-xl flex items-center justify-center gap-2 border text-xs font-bold transition-all ${platform === opt.id
                 ? 'bg-brand/10 border-brand text-brand shadow-sm'
                 : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 text-gray-500 hover:bg-gray-100'
-            }`}
+              }`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d={opt.icon} />
@@ -70,60 +69,65 @@ export const TextImprover: React.FC<TextImproverProps> = ({ onImprove, isProcess
           </label>
           <div className="flex flex-wrap gap-2">
             {platform === 'email' && (['formal', 'semi-formal', 'neutral'] as EmailTone[]).map(t => (
-              <button key={t} onClick={() => setEmailTone(t)} className={`px-3 py-1.5 rounded-full text-xs border transition-all ${emailTone === t ? 'bg-blue-500 text-white border-blue-500' : 'border-gray-300 dark:border-gray-600'}`}>{t}</button>
+              <button key={t} onClick={() => setEmailTone(t)} className={`px-3 py-1.5 rounded-full text-xs border transition-all ${emailTone === t ? 'bg-blue-500 text-white border-blue-500' : 'border-gray-300 dark:border-gray-600'}`}>
+                {t === 'formal' ? 'Formal' : t === 'semi-formal' ? 'Semi-formal' : 'Neutral'}
+              </button>
             ))}
             {platform === 'chat' && (['angry', 'serious', 'friendly', 'professional', 'formal'] as ChatTone[]).map(t => (
-              <button key={t} onClick={() => setChatTone(t)} className={`px-3 py-1.5 rounded-full text-xs border transition-all ${chatTone === t ? 'bg-purple-500 text-white border-purple-500' : 'border-gray-300 dark:border-gray-600'}`}>{t}</button>
+              <button key={t} onClick={() => setChatTone(t)} className={`px-3 py-1.5 rounded-full text-xs border transition-all ${chatTone === t ? 'bg-purple-500 text-white border-purple-500' : 'border-gray-300 dark:border-gray-600'}`}>
+                {t === 'angry' ? 'Enojado 😡' : t === 'serious' ? 'Serio 😐' : t === 'friendly' ? 'Amistoso 😊' : t === 'professional' ? 'Profesional 💼' : 'Formal 👔'}
+              </button>
             ))}
             {platform === 'instructions' && (['professional', 'semi-formal', 'neutral'] as InstructionTone[]).map(t => (
-              <button key={t} onClick={() => setInstructionTone(t)} className={`px-3 py-1.5 rounded-full text-xs border transition-all ${instructionTone === t ? 'bg-emerald-500 text-white border-emerald-500' : 'border-gray-300 dark:border-gray-600'}`}>{t}</button>
+              <button key={t} onClick={() => setInstructionTone(t)} className={`px-3 py-1.5 rounded-full text-xs border transition-all ${instructionTone === t ? 'bg-emerald-500 text-white border-emerald-500' : 'border-gray-300 dark:border-gray-600'}`}>
+                {t === 'professional' ? 'Profesional' : t === 'semi-formal' ? 'Semi-formal' : 'Neutral'}
+              </button>
             ))}
             {platform === 'prompt_improver' && (['general', 'image', 'code', 'video'] as PromptCategory[]).map(c => (
               <button key={c} onClick={() => setPromptCategory(c)} className={`px-3 py-1.5 rounded-full text-xs border transition-all flex items-center gap-1 ${promptCategory === c ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 dark:border-gray-600'}`}>
                 {c === 'image' && '🖼️'} {c === 'code' && '💻'} {c === 'video' && '🎥'} {c === 'general' && '🧠'}
-                <span className="capitalize">{c}</span>
+                <span className="capitalize">{c === 'image' ? 'Imagen' : c === 'code' ? 'Código' : c === 'video' ? 'Video' : 'General'}</span>
               </button>
             ))}
           </div>
         </div>
 
         <div>
-           <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">
-              {platform === 'prompt_improver' ? 'Nivel de Imaginación' : 'Opciones Pro'}
-            </label>
-           {platform === 'prompt_improver' ? (
-             <div className="px-2">
-               <input type="range" min="1" max="5" value={imaginationLevel} onChange={(e) => setImaginationLevel(parseInt(e.target.value))} className="w-full accent-indigo-600 h-1.5 rounded-lg bg-gray-200 dark:bg-gray-700 appearance-none cursor-pointer" />
-               <div className="flex justify-between text-[10px] text-gray-400 mt-2 font-mono">
-                  <span>CONSERVADOR</span>
-                  <span className="text-indigo-500 font-bold">NIVEL {imaginationLevel}</span>
-                  <span>CREATIVO</span>
-               </div>
-             </div>
-           ) : (
-             <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
-                  <input type="checkbox" checked={isHumanized} onChange={(e) => setIsHumanized(e.target.checked)} className="w-4 h-4 accent-brand" />
-                  <span className="text-sm">Humanizar Texto 🧬</span>
+          <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">
+            {platform === 'prompt_improver' ? 'Nivel de Imaginación' : 'Opciones Pro'}
+          </label>
+          {platform === 'prompt_improver' ? (
+            <div className="px-2">
+              <input type="range" min="1" max="5" value={imaginationLevel} onChange={(e) => setImaginationLevel(parseInt(e.target.value))} className="w-full accent-indigo-600 h-1.5 rounded-lg bg-gray-200 dark:bg-gray-700 appearance-none cursor-pointer" />
+              <div className="flex justify-between text-[10px] text-gray-400 mt-2 font-mono">
+                <span>CONSERVADOR</span>
+                <span className="text-indigo-500 font-bold">NIVEL {imaginationLevel}</span>
+                <span>CREATIVO</span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <label className="flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
+                <input type="checkbox" checked={isHumanized} onChange={(e) => setIsHumanized(e.target.checked)} className="w-4 h-4 accent-brand" />
+                <span className="text-sm">Humanizar Texto 🧬</span>
+              </label>
+              {platform === 'chat' && (
+                <label className="flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700/50">
+                  <input type="checkbox" checked={useEmojis} onChange={(e) => setUseEmojis(e.target.checked)} className="w-4 h-4 accent-brand" />
+                  <span className="text-sm">Usar Emojis ✨</span>
                 </label>
-                {platform === 'chat' && (
-                  <label className="flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700/50">
-                    <input type="checkbox" checked={useEmojis} onChange={(e) => setUseEmojis(e.target.checked)} className="w-4 h-4 accent-brand" />
-                    <span className="text-sm">Usar Emojis ✨</span>
-                  </label>
-                )}
-             </div>
-           )}
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       <button
         onClick={handleSubmit}
         disabled={isProcessing}
-        className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all active:scale-[0.98] ${
-           isProcessing ? 'bg-gray-400 cursor-not-allowed' : 
-           platform === 'prompt_improver' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:shadow-indigo-500/30' : 'bg-brand hover:bg-brandDark shadow-brand/20'
-        }`}
+        className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all active:scale-[0.98] ${isProcessing ? 'bg-gray-400 cursor-not-allowed' :
+            platform === 'prompt_improver' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:shadow-indigo-500/30' : 'bg-brand hover:bg-brandDark shadow-brand/20'
+          }`}
       >
         {isProcessing ? 'Procesando...' : platform === 'prompt_improver' ? 'MEJORAR PROMPT PROFESIONALMENTE' : 'TRANSFORMAR TEXTO'}
       </button>
